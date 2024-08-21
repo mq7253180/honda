@@ -1,0 +1,10 @@
+package com.honda.service;
+
+import com.honda.entity.UserEntity;
+import com.quincy.auth.o.User;
+import com.quincy.sdk.Client;
+
+public interface UserService {
+	public UserEntity update(Integer shardingKey, UserEntity vo);
+	public User find(String loginName, Client client);
+}
