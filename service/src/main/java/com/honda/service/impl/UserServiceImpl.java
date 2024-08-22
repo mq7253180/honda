@@ -19,6 +19,7 @@ import com.quincy.sdk.annotation.ReadOnly;
 import com.quincy.sdk.annotation.sharding.ShardingKey;
 import com.quincy.sdk.helper.CommonHelper;
 
+import com.honda.dao.UserAllShardsDao;
 import com.honda.dao.UserDao;
 import com.honda.dao.UserRepository;
 import com.honda.entity.UserEntity;
@@ -30,7 +31,10 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
+	private UserAllShardsDao userAllShardsDao;
+	@Autowired
 	private UserDao userDao;
+	
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
@@ -70,7 +74,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@ReadOnly
 	public User find(String loginName, Client client) {
-		List<UserDto>[] lists = userDao.findUsers(loginName, loginName, loginName);
+		List<UserDto>[] lists = userAllShardsDao.findUsers(loginName, loginName, loginName);
 		User user = null;
 		Map<Long, Enterprise> enterprises = new HashMap<Long, Enterprise>();;
 		for(List<UserDto> list:lists) {
@@ -104,6 +108,15 @@ public class UserServiceImpl implements UserService {
 		user.setEnterprises(new ArrayList<>(enterprises.size()));
 		for(Enterprise e:enterprises.values())
 			user.getEnterprises().add(e);
+		if(user.getEnterprises().size()==1)
+			user.setCurrentEnterprise(user.getEnterprises().get(0));
 		return user;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
+	@Override
+	public void create(@ShardingKey Integer shardingKey, UserEntity vo, Long roleId) {
+		UserEntity po = userRepository.save(vo);
+		userDao.addRoleUserRel(roleId, po.getId());
 	}
 }
