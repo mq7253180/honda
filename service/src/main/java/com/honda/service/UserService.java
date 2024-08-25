@@ -9,4 +9,5 @@ public interface UserService {
 	public UserEntity update(Integer shardingKey, UserEntity vo);
 	public User find(String loginName, Client client);
 	public void create(@ShardingKey Integer shardingKey, UserEntity vo, Long roleId);
+	public int updatePassword(@ShardingKey Integer shardingKey, Long userId, String password);
 }

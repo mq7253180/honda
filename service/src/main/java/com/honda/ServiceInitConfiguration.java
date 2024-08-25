@@ -49,6 +49,11 @@ public class ServiceInitConfiguration {
 			}
 
 			@Override
+			public void updatePassword(User user) {
+				userService.updatePassword(user.getShardingKey(), user.getId(), user.getPassword());
+			}
+
+			@Override
 			public ModelAndView signinView(HttpServletRequest request) {
 				return null;
 			}

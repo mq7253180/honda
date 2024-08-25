@@ -16,6 +16,7 @@ import com.quincy.auth.o.Enterprise;
 import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.annotation.ReadOnly;
+import com.quincy.sdk.annotation.sharding.Sharding;
 import com.quincy.sdk.annotation.sharding.ShardingKey;
 import com.quincy.sdk.helper.CommonHelper;
 
@@ -118,5 +119,11 @@ public class UserServiceImpl implements UserService {
 	public void create(@ShardingKey Integer shardingKey, UserEntity vo, Long roleId) {
 		UserEntity po = userRepository.save(vo);
 		userDao.addRoleUserRel(roleId, po.getId());
+	}
+
+	@Sharding
+	@Override
+	public int updatePassword(@ShardingKey Integer shardingKey, Long userId, String password) {
+		return userDao.updatePassword(password, userId);
 	}
 }
