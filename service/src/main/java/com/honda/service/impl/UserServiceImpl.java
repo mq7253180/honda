@@ -16,7 +16,6 @@ import com.quincy.auth.o.Enterprise;
 import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.annotation.ReadOnly;
-import com.quincy.sdk.annotation.sharding.Sharding;
 import com.quincy.sdk.annotation.sharding.ShardingKey;
 import com.quincy.sdk.helper.CommonHelper;
 
@@ -38,8 +37,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public UserEntity update(@ShardingKey(snowFlake = true)Long userId, UserEntity vo) {
-		UserEntity po = userRepository.findById(userId).get();
+	public UserEntity update(UserEntity vo) {
+		UserEntity po = userRepository.findById(vo.getId()).get();
 		String username = CommonHelper.trim(vo.getUsername());
 		if(username!=null)
 			po.setUsername(username);
@@ -115,15 +114,13 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public void create(@ShardingKey(snowFlake = true)Long userId, UserEntity vo, Long roleId) {
-		vo.setId(userId);
+	public void create(@ShardingKey(snowFlake = true)Long enterpriseId, UserEntity vo, Long roleId) {
 		UserEntity po = userRepository.save(vo);
 		userDao.addRoleUserRel(roleId, po.getId());
 	}
 
-	@Sharding
 	@Override
-	public int updatePassword(@ShardingKey(snowFlake = true)Long userId, String password) {
-		return userDao.updatePassword(password, userId);
+	public int updatePassword(Long userId, String password) {
+		return userAllShardsDao.updatePassword(password, userId).length;
 	}
 }

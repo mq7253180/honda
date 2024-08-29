@@ -44,7 +44,7 @@ public class ServiceInitConfiguration {
 					vo.setJsessionidMobileBrowser(jsessionid);
 				else if(client.isApp())
 					vo.setJsessionidApp(jsessionid);
-				userService.update(userId, vo);
+				userService.update(vo);
 			}
 
 			@Override
