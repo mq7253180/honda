@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
 	private UserAllShardsDao userAllShardsDao;
 	@Autowired
 	private UserDao userDao;
-	
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
@@ -106,9 +105,9 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 		}
-		user.setEnterprises(new ArrayList<>(enterprises.size()));
-		for(Enterprise e:enterprises.values())
-			user.getEnterprises().add(e);
+		List<Enterprise> enterpriseList = new ArrayList<Enterprise>(enterprises.size());
+		enterpriseList.addAll(enterprises.values());
+		user.setEnterprises(enterpriseList);
 		if(user.getEnterprises().size()==1)
 			user.setCurrentEnterprise(user.getEnterprises().get(0));
 		return user;

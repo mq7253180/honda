@@ -30,8 +30,7 @@ public class ServiceInitConfiguration {
 		return new AuthActions() {
 			@Override
 			public User findUser(String username, Client client) {
-				User user = userService.find(username, client);
-				return user;
+				return userService.find(username, client);
 			}
 
 			@Override
