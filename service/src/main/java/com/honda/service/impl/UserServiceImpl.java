@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public UserEntity update(@ShardingKey Integer shardingKey, UserEntity vo) {
-		UserEntity po = userRepository.findById(vo.getId()).get();
+	public UserEntity update(@ShardingKey(snowFlake = true)Long userId, UserEntity vo) {
+		UserEntity po = userRepository.findById(userId).get();
 		String username = CommonHelper.trim(vo.getUsername());
 		if(username!=null)
 			po.setUsername(username);
@@ -116,14 +116,15 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public void create(@ShardingKey Integer shardingKey, UserEntity vo, Long roleId) {
+	public void create(@ShardingKey(snowFlake = true)Long userId, UserEntity vo, Long roleId) {
+		vo.setId(userId);
 		UserEntity po = userRepository.save(vo);
 		userDao.addRoleUserRel(roleId, po.getId());
 	}
 
 	@Sharding
 	@Override
-	public int updatePassword(@ShardingKey Integer shardingKey, Long userId, String password) {
+	public int updatePassword(@ShardingKey(snowFlake = true)Long userId, String password) {
 		return userDao.updatePassword(password, userId);
 	}
 }

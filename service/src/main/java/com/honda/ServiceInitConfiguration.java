@@ -45,12 +45,12 @@ public class ServiceInitConfiguration {
 					vo.setJsessionidMobileBrowser(jsessionid);
 				else if(client.isApp())
 					vo.setJsessionidApp(jsessionid);
-				userService.update(user.getShardingKey(), vo);
+				userService.update(user.getId(), vo);
 			}
 
 			@Override
 			public void updatePassword(User user) {
-				userService.updatePassword(user.getShardingKey(), user.getId(), user.getPassword());
+				userService.updatePassword(user.getId(), user.getPassword());
 			}
 
 			@Override
