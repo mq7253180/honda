@@ -35,9 +35,9 @@ public class ServiceInitConfiguration {
 			}
 
 			@Override
-			public void updateLastLogin(User user, String jsessionid, Client client) {
+			public void updateLastLogin(Long userId, String jsessionid, Client client) {
 				UserEntity vo = new UserEntity();
-				vo.setId(user.getId());
+				vo.setId(userId);
 				vo.setLastLogined(new Date());
 				if(client.isPc())
 					vo.setJsessionidPcBrowser(jsessionid);
@@ -45,12 +45,12 @@ public class ServiceInitConfiguration {
 					vo.setJsessionidMobileBrowser(jsessionid);
 				else if(client.isApp())
 					vo.setJsessionidApp(jsessionid);
-				userService.update(user.getId(), vo);
+				userService.update(userId, vo);
 			}
 
 			@Override
-			public void updatePassword(User user) {
-				userService.updatePassword(user.getId(), user.getPassword());
+			public void updatePassword(Long userId, String password) {
+				userService.updatePassword(userId, password);
 			}
 
 			@Override
