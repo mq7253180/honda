@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(po);
 	}
 
-	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
 	public UserEntity update(User vo) {
 		UserEntity po = userRepository.findById(vo.getId()).get();
