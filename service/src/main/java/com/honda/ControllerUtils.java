@@ -27,4 +27,19 @@ public class ControllerUtils {
 		user.setJsessionid(jsessionid);
 		return user;
 	}
+
+	public static void loadEntity(User vo, UserEntity po) {
+		if(vo.getName()!=null)
+			po.setName(vo.getName());;
+		if(vo.getGender()!=null)
+			po.setGender(vo.getGender());;
+		if(vo.getEmail()!=null)
+			po.setEmail(vo.getEmail());;
+		if(vo.getMobilePhone()!=null)
+			po.setMobilePhone(vo.getMobilePhone());;
+		if(vo.getUsername()!=null)
+			po.setUsername(vo.getUsername());;
+		if(vo.getPassword()!=null)
+			po.setPassword(vo.getPassword());;
+	}
 }

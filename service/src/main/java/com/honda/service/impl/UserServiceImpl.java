@@ -73,8 +73,15 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public void create(UserEntity vo, Long roleId) {
-		UserEntity po = userRepository.save(vo);
+	public void create(User vo, Long roleId) {
+		UserEntity po = new UserEntity();
+		ControllerUtils.loadEntity(vo, po);
+		Date now = new Date();
+		po.setCreationTime(now);
+		po.setLastLogined(now);
+		if(vo.getId()!=null)
+			po.setId(vo.getId());
+		po = userRepository.save(po);
 		userDao.addRoleUserRel(roleId, po.getId());
 	}
 

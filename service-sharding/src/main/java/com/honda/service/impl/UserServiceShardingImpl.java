@@ -17,6 +17,7 @@ import com.honda.service.UserServiceShardingProxy;
 import com.quincy.auth.o.Enterprise;
 import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
+import com.quincy.sdk.SnowFlake;
 
 @Primary
 @Service
@@ -28,13 +29,12 @@ public class UserServiceShardingImpl implements UserService {
 
 	@Override
 	public UserEntity updateLogin(User vo, Client client) {
-		// TODO Auto-generated method stub
-		return null;
+		return userServiceShardingProxy.update(vo.getShardingKey(), vo);
 	}
 
 	@Override
 	public UserEntity update(User vo) {
-		return null;
+		return userServiceShardingProxy.update(vo.getShardingKey(), vo);
 	}
 
 	@Override
@@ -73,18 +73,21 @@ public class UserServiceShardingImpl implements UserService {
 		List<Enterprise> enterpriseList = new ArrayList<Enterprise>(enterprises.size());
 		enterpriseList.addAll(enterprises.values());
 		user.setEnterprises(enterpriseList);
-		if(user.getEnterprises().size()==1)
-			user.setCurrentEnterprise(user.getEnterprises().get(0));
+		if(user.getEnterprises().size()==1) {
+			Enterprise currentEnterprise = user.getEnterprises().get(0);
+			user.setCurrentEnterprise(currentEnterprise);
+			user.setShardingKey(SnowFlake.extractShardingKey(currentEnterprise.getId()));
+		}
 		return user;
 	}
 
 	@Override
-	public void create(UserEntity vo, Long roleId) {
-		
+	public void create(User vo, Long roleId) {
+		userServiceShardingProxy.create(vo.getShardingKey(), vo, roleId);
 	}
 
 	@Override
 	public int updatePassword(User vo) {
-		return 0;
+		return userServiceShardingProxy.updatePassword(vo.getShardingKey(), vo);
 	}
 }
