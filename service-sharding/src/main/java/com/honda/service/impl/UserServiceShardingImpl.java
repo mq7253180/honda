@@ -38,11 +38,6 @@ public class UserServiceShardingImpl implements UserService {
 	}
 
 	@Override
-	public int updatePassword(User vo) {
-		return userServiceShardingProxy.updatePassword(vo.getShardingKey(), vo);
-	}
-
-	@Override
 	public User find(String loginName, Client client) {
 		List<UserDto>[] lists = userAllShardsDao.findUsers(loginName, loginName, loginName);
 		User user = null;

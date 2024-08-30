@@ -42,7 +42,7 @@ public class ShardingServiceInitConfiguration {
 				User vo = new User();
 				vo.setId(userId);
 				vo.setPassword(password);
-				userService.updatePassword(vo);
+				userService.update(vo);
 			}
 
 			@Override

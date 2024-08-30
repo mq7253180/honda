@@ -20,11 +20,6 @@ public class UserServiceShardingProxyImpl extends UserServiceImpl implements Use
 	public UserEntity update(@ShardingKey Long shardingKey, User vo) {
 		return this.update(vo);
 	}
-	
-	@Override
-	public int updatePassword(@ShardingKey Long shardingKey, User vo) {
-		return this.updatePassword(vo);
-	}
 
 	@Override
 	public void create(@ShardingKey Long shardingKey, User vo, Long roleId) {

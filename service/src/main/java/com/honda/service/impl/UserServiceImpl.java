@@ -84,9 +84,4 @@ public class UserServiceImpl implements UserService {
 		po = userRepository.save(po);
 		userDao.addRoleUserRel(roleId, po.getId());
 	}
-
-	@Override
-	public int updatePassword(User vo) {
-		return userDao.updatePassword(vo.getPassword(), vo.getId()).length;
-	}
 }
