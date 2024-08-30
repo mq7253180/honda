@@ -7,4 +7,6 @@ import com.quincy.sdk.annotation.JDBCDao;
 public interface UserDao {
 	@ExecuteUpdate(sql = "INSERT INTO s_role_user_rel(role_id, user_id) VALUES(?, ?)")
 	public int addRoleUserRel(Long roleId, Long userId);
+	@ExecuteUpdate(sql = "UPDATE b_user SET password=? WHERE id=?")
+	public int[] updatePassword(String password, Long userId);
 }

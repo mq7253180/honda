@@ -8,19 +8,23 @@ public class ControllerUtils {
 	public static User toUser(UserEntity entity, Client client) {
 		User user = new User();
 		user.setId(entity.getId());
-		user.setCreationTime(entity.getCreationTime());
 		user.setName(entity.getName());
-		user.setUsername(entity.getUsername());
-		user.setMobilePhone(entity.getMobilePhone());
+		user.setGender(entity.getGender());
 		user.setEmail(entity.getEmail());
+		user.setMobilePhone(entity.getMobilePhone());
+		user.setUsername(entity.getUsername());
 		user.setPassword(entity.getPassword());
-		if(client.isPc())
-			user.setJsessionid(entity.getJsessionidPcBrowser());
-		if(client.isMobile())
-			user.setJsessionid(entity.getJsessionidMobileBrowser());
-		if(client.isApp())
-			user.setJsessionid(entity.getJsessionidApp());
 		user.setLastLogined(entity.getLastLogined());
+		user.setCreationTime(entity.getCreationTime());
+		String jsessionid = null;
+		if(client.isPc()) {
+			jsessionid = entity.getJsessionidPcBrowser();
+		} else if(client.isMobile()) {
+			jsessionid = entity.getJsessionidMobileBrowser();
+		} else if(client.isApp()) {
+			jsessionid = entity.getJsessionidApp();
+		}
+		user.setJsessionid(jsessionid);
 		return user;
 	}
 }

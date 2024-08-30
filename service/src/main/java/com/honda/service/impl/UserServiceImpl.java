@@ -1,10 +1,6 @@
 package com.honda.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,18 +8,14 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.quincy.auth.o.Enterprise;
 import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.annotation.ReadOnly;
-import com.quincy.sdk.annotation.sharding.ShardingKey;
 import com.quincy.sdk.helper.CommonHelper;
-
-import com.honda.dao.UserAllShardsDao;
+import com.honda.ControllerUtils;
 import com.honda.dao.UserDao;
 import com.honda.dao.UserRepository;
 import com.honda.entity.UserEntity;
-import com.honda.o.UserDto;
 import com.honda.service.UserService;
 
 @Service
@@ -31,13 +23,25 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private UserAllShardsDao userAllShardsDao;
-	@Autowired
 	private UserDao userDao;
+
+	@Override
+	public UserEntity updateLogin(User vo, Client client) {
+		String jsessionid = vo.getJsessionid();
+		UserEntity po = userRepository.findById(vo.getId()).get();
+		po.setLastLogined(new Date());
+		if(client.isPc())
+			po.setJsessionidPcBrowser(jsessionid);
+		else if(client.isMobile())
+			po.setJsessionidMobileBrowser(jsessionid);
+		else if(client.isApp())
+			po.setJsessionidApp(jsessionid);
+		return userRepository.save(po);
+	}
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public UserEntity update(UserEntity vo) {
+	public UserEntity update(User vo) {
 		UserEntity po = userRepository.findById(vo.getId()).get();
 		String username = CommonHelper.trim(vo.getUsername());
 		if(username!=null)
@@ -54,73 +58,28 @@ public class UserServiceImpl implements UserService {
 		String name = CommonHelper.trim(vo.getName());
 		if(name!=null)
 			po.setName(name);
-		String jsessionidPc = CommonHelper.trim(vo.getJsessionidPcBrowser());
-		if(jsessionidPc!=null)
-			po.setJsessionidPcBrowser(jsessionidPc);
-		String jsessionidMobile = CommonHelper.trim(vo.getJsessionidMobileBrowser());
-		if(jsessionidMobile!=null)
-			po.setJsessionidMobileBrowser(jsessionidMobile);
-		String jsessionidApp = CommonHelper.trim(vo.getJsessionidApp());
-		if(jsessionidApp!=null)
-			po.setJsessionidApp(jsessionidApp);
-		Date lastLogined = vo.getLastLogined();
-		if(lastLogined!=null)
-			po.setLastLogined(lastLogined);
-		userRepository.save(po);
-		return po;
+		Integer gender = vo.getGender();
+		if(gender!=null)
+			po.setGender(gender);
+		return userRepository.save(po);
 	}
 
 	@Override
 	@ReadOnly
 	public User find(String loginName, Client client) {
-		List<UserDto>[] lists = userAllShardsDao.findUsers(loginName, loginName, loginName);
-		User user = null;
-		Map<Long, Enterprise> enterprises = new HashMap<Long, Enterprise>();;
-		for(List<UserDto> list:lists) {
-			for(UserDto o:list) {
-				if(user==null) {
-					user = new User();
-					user.setId(o.getId());
-					user.setUsername(o.getUsername());
-					user.setMobilePhone(o.getMobilePhone());
-					user.setEmail(o.getEmail());
-					user.setPassword(o.getPassword());
-					user.setName(o.getName());
-					user.setGender(o.getGender());
-					if(client.isPc())
-						user.setJsessionid(o.getJsessionidPc());
-					if(client.isMobile())
-						user.setJsessionid(o.getJsessionidMobile());
-					if(client.isApp())
-						user.setJsessionid(o.getJsessionidApp());
-				}
-				Enterprise e = enterprises.get(o.getEnterpriseId());
-				if(e==null) {
-					e = new Enterprise();
-					e.setId(o.getEnterpriseId());
-					e.setName(o.getEnterpriseName());
-					e.setShardingKey(o.getShardingKey());
-					enterprises.put(o.getEnterpriseId(), e);
-				}
-			}
-		}
-		List<Enterprise> enterpriseList = new ArrayList<Enterprise>(enterprises.size());
-		enterpriseList.addAll(enterprises.values());
-		user.setEnterprises(enterpriseList);
-		if(user.getEnterprises().size()==1)
-			user.setCurrentEnterprise(user.getEnterprises().get(0));
-		return user;
+		UserEntity userPo = userRepository.findByUsernameOrEmailOrMobilePhone(loginName, loginName, loginName);
+		return ControllerUtils.toUser(userPo, client);
 	}
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public void create(@ShardingKey(snowFlake = true)Long enterpriseId, UserEntity vo, Long roleId) {
+	public void create(UserEntity vo, Long roleId) {
 		UserEntity po = userRepository.save(vo);
 		userDao.addRoleUserRel(roleId, po.getId());
 	}
 
 	@Override
-	public int updatePassword(Long userId, String password) {
-		return userAllShardsDao.updatePassword(password, userId).length;
+	public int updatePassword(User vo) {
+		return userDao.updatePassword(vo.getPassword(), vo.getId()).length;
 	}
 }

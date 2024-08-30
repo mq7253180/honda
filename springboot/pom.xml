@@ -254,7 +254,7 @@
 		</dependency>
 		<dependency>
 		    <groupId>com.honda</groupId>
-		    <artifactId>honda-service</artifactId>
+		    <artifactId>honda-service-sharding</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

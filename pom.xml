@@ -150,6 +150,8 @@
 	<modules>
 		<module>common</module>
 		<module>service</module>
+		<module>service-sharding</module>
 		<module>springboot</module>
+		<module>springboot-single</module>
 	</modules>
 </project>

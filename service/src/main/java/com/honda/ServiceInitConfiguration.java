@@ -1,6 +1,5 @@
 package com.honda;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.honda.entity.UserEntity;
 import com.honda.service.UserService;
 import com.quincy.auth.TempPwdLoginEmailInfo;
 import com.quincy.auth.controller.AuthActions;
@@ -25,7 +23,7 @@ public class ServiceInitConfiguration {
 	@Autowired
 	private UserService userService;
 
-	@Bean
+	@Bean("secondaryAuthActions")
 	public AuthActions authActions() {
 		return new AuthActions() {
 			@Override
@@ -35,21 +33,18 @@ public class ServiceInitConfiguration {
 
 			@Override
 			public void updateLastLogin(Long userId, String jsessionid, Client client) {
-				UserEntity vo = new UserEntity();
+				User vo = new User();
 				vo.setId(userId);
-				vo.setLastLogined(new Date());
-				if(client.isPc())
-					vo.setJsessionidPcBrowser(jsessionid);
-				else if(client.isMobile())
-					vo.setJsessionidMobileBrowser(jsessionid);
-				else if(client.isApp())
-					vo.setJsessionidApp(jsessionid);
-				userService.update(vo);
+				vo.setJsessionid(jsessionid);
+				userService.updateLogin(vo, client);
 			}
 
 			@Override
 			public void updatePassword(Long userId, String password) {
-				userService.updatePassword(userId, password);
+				User vo = new User();
+				vo.setId(userId);
+				vo.setPassword(password);
+				userService.updatePassword(vo);
 			}
 
 			@Override
