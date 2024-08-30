@@ -29,7 +29,7 @@ public class UserServiceShardingImpl implements UserService {
 
 	@Override
 	public UserEntity updateLogin(User vo, Client client) {
-		return userServiceShardingProxy.update(vo.getShardingKey(), vo);
+		return userServiceShardingProxy.updateLogin(vo.getShardingKey(), vo, client);
 	}
 
 	@Override
