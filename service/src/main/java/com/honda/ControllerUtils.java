@@ -14,7 +14,7 @@ public class ControllerUtils {
 		user.setMobilePhone(entity.getMobilePhone());
 		user.setUsername(entity.getUsername());
 		user.setPassword(entity.getPassword());
-		user.setLastLogined(entity.getLastLogined());
+//		user.setLastLogined(entity.getLastLogined());
 		user.setCreationTime(entity.getCreationTime());
 		String jsessionid = null;
 		if(client.isPc()) {

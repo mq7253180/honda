@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
 	public UserEntity updateLogin(User vo, Client client) {
 		String jsessionid = vo.getJsessionid();
 		UserEntity po = userRepository.findById(vo.getId()).get();
-		po.setLastLogined(new Date());
 		if(client.isPc())
 			po.setJsessionidPcBrowser(jsessionid);
 		else if(client.isMobile())
@@ -72,15 +71,14 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public void create(User vo, Long roleId) {
+	public UserEntity create(User vo, Long roleId) {
 		UserEntity po = new UserEntity();
 		ControllerUtils.loadEntity(vo, po);
-		Date now = new Date();
-		po.setCreationTime(now);
-		po.setLastLogined(now);
+		po.setCreationTime(new Date());
 		if(vo.getId()!=null)
 			po.setId(vo.getId());
 		po = userRepository.save(po);
 		userDao.addRoleUserRel(roleId, po.getId());
+		return po;
 	}
 }

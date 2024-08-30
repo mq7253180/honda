@@ -82,7 +82,7 @@ public class UserServiceShardingImpl implements UserService {
 	}
 
 	@Override
-	public void create(User vo, Long roleId) {
-		userServiceShardingProxy.create(vo.getShardingKey(), vo, roleId);
+	public UserEntity create(User vo, Long roleId) {
+		return userServiceShardingProxy.create(vo.getShardingKey(), vo, roleId);
 	}
 }
