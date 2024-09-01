@@ -3,8 +3,11 @@ package com.honda.dao;
 import java.util.List;
 
 import com.honda.o.UserDto;
+import com.honda.o.UserExtDto;
+import com.quincy.sdk.annotation.ExecuteUpdate;
 import com.quincy.sdk.annotation.sharding.AllShardsJDBCDao;
 import com.quincy.sdk.annotation.sharding.ExecuteQuery;
+import com.quincy.sdk.annotation.sharding.ShardingKeyToSkip;
 
 @AllShardsJDBCDao
 public interface UserAllShardsDao {
@@ -15,4 +18,8 @@ public interface UserAllShardsDao {
 			+ "INNER JOIN s_enterprise e ON role.enterprise_id=e.id "
 			+ "WHERE u.mobile_phone=? OR u.email=? OR u.username=?", returnItemType = UserDto.class)
 	public List<UserDto>[] findUsers(String mobilePhone, String email, String username);
+	@ExecuteUpdate(sql = "UPDATE b_user SET username=?,mobile_phone=?,email=?,password=?,name=?,gender=? WHERE id=?")
+	public int update(@ShardingKeyToSkip Long shardingKeyToSkip, String username, String mobilePhone, String email, String password, String name, int gender, Long id);
+	@ExecuteQuery(sql = "SELECT * FROM b_user_ext WHERE status=0;", returnItemType = UserExtDto.class)
+	public List<UserExtDto>[] findUserExt();
 }

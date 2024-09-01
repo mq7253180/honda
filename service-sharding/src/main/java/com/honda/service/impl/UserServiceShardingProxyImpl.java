@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.honda.dao.UserAllShardsDao;
 import com.honda.dao.UserExtRepositoy;
+import com.honda.dao.UserRepository;
 import com.honda.dao.UserShardingDao;
 import com.honda.entity.UserEntity;
 import com.honda.entity.UserExtEntity;
@@ -19,9 +21,13 @@ import com.quincy.sdk.annotation.sharding.ShardingKey;
 @Service
 public class UserServiceShardingProxyImpl extends UserServiceImpl implements UserServiceShardingProxy {
 	@Autowired
+	private UserRepository userRepository;
+	@Autowired
 	private UserExtRepositoy userExtRepositoy;
 	@Autowired
 	private UserShardingDao userShardingDao;
+	@Autowired
+	private UserAllShardsDao userAllShardsDao;
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
@@ -48,5 +54,13 @@ public class UserServiceShardingProxyImpl extends UserServiceImpl implements Use
 		userExt.setUpdationStatus(1);
 		userExtRepositoy.save(userExt);
 		return po;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
+	@Override
+	public int syncData(@ShardingKey Long shardingKey, Long id) {
+		UserEntity po = userRepository.findById(id).get();
+		userAllShardsDao.update(shardingKey, po.getUsername(), po.getMobilePhone(), po.getEmail(), po.getPassword(), po.getName(), po.getGender(), id);
+		return userShardingDao.updateUpdationStatus(1, id);
 	}
 }

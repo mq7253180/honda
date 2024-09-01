@@ -25,6 +25,8 @@ public class UserExtEntity {
 	private Long id;
 	@Column(name="updation_status")
 	private Integer updationStatus;
+	@Column(name="updation_version")
+	private Integer updationVersion;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	@Column(name="last_updation_time")
 	private Date lastUpdationTime;

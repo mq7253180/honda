@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
@@ -16,10 +18,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.honda.dao.UserAllShardsDao;
-import com.honda.dao.UserRepository;
-import com.honda.dao.UserShardingDao;
 import com.honda.entity.UserEntity;
 import com.honda.o.UserDto;
+import com.honda.o.UserExtDto;
 import com.honda.service.UserService;
 import com.honda.service.UserServiceShardingProxy;
 import com.quincy.auth.o.Enterprise;
@@ -32,25 +33,21 @@ import com.quincy.sdk.SnowFlake;
 public class UserServiceShardingImpl implements UserService {
 	private final static Log log = LogFactory.getLog(UserServiceShardingImpl.class);
 	@Autowired
-	private UserServiceShardingProxy userServiceShardingProxy;
-	@Autowired
 	private UserAllShardsDao userAllShardsDao;
 	@Autowired
-	private UserShardingDao userShardingDao;
-	@Autowired
-	private UserRepository userRepository;
+	private UserServiceShardingProxy userServiceShardingProxy;
 
 	@Override
 	public UserEntity updateLogin(User vo, Client client) {
 		UserEntity po = userServiceShardingProxy.updateLogin(vo.getShardingKey(), vo, client);
-		sync(vo.getId());
+		sync(vo.getId(), vo.getShardingKey());
 		return po;
 	}
 
 	@Override
 	public UserEntity update(User vo) {
 		UserEntity po = userServiceShardingProxy.update(vo.getShardingKey(), vo);
-		sync(vo.getId());
+		sync(vo.getId(), vo.getShardingKey());
 		return po;
 	}
 
@@ -58,8 +55,8 @@ public class UserServiceShardingImpl implements UserService {
 	private static final Object LOCK = new Object();
 	private static boolean stoped = false;
 
-	private static void sync(Long userId) {
-		userIdsToSync.put(userId, userId);
+	private static void sync(Long userId, Long shardingKey) {
+		userIdsToSync.put(userId, shardingKey);
 		synchronized(LOCK) {
 			LOCK.notifyAll();
 		}
@@ -67,30 +64,49 @@ public class UserServiceShardingImpl implements UserService {
 
 	@PostConstruct
 	public void init() {
-		while(!stoped) {
-			synchronized(LOCK) {
-				try {
-					LOCK.wait(30000);
-				} catch (InterruptedException e) {
-					log.error("WAITING_ERROR=========", e);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(!stoped) {
+					synchronized(LOCK) {
+						try {
+							LOCK.wait(10000);
+						} catch (InterruptedException e) {
+							log.error("WAITING_ERROR=========", e);
+						}
+						if(userIdsToSync!=null&&userIdsToSync.size()>0) {
+							userIdsToSync.entrySet().forEach(entity->{
+								Long id = entity.getKey();
+								try {
+									userServiceShardingProxy.syncData(entity.getValue(), id);
+									userIdsToSync.remove(id);
+								} catch(Exception ex) {
+									log.error("USER_DATA_SYNC_ERROR===============\r\n", ex);
+								}
+							});
+						}
+					}
 				}
-				userIdsToSync.keySet().forEach(id->{
-					syncData(id);
-					userIdsToSync.remove(id);
-				});
 			}
-		}
+		}).start();
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				List<UserExtDto>[] userExtListArray = userAllShardsDao.findUserExt();
+				for(int i=0;i<userExtListArray.length;i++) {
+					List<UserExtDto> userExtList = userExtListArray[i];
+					long shardingKey = i;
+					userExtList.forEach(o->{
+						userServiceShardingProxy.syncData(shardingKey, o.getId());
+					});
+				}
+			}
+		}, 30000, 30000);
 	}
 
 	@PreDestroy
 	public void destroy() {
 		stoped = true;
-	}
-
-	private void syncData(Long id) {
-		UserEntity po = userRepository.findById(id).get();
-		
-		userShardingDao.updateUpdationStatus(1, id);
 	}
 
 	@Override

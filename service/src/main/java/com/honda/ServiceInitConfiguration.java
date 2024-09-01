@@ -23,7 +23,7 @@ public class ServiceInitConfiguration {
 	@Autowired
 	private UserService userService;
 
-	@Bean("secondaryAuthActions")
+	@Bean
 	public AuthActions authActions() {
 		return new AuthActions() {
 			@Override
