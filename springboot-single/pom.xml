@@ -258,6 +258,7 @@
 		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
 		    <version>${version.spring-cloud}</version>
 		</dependency>
+
 		<dependency>
 		    <groupId>com.quincy</groupId>
 		    <artifactId>quincy-jdbc</artifactId>
@@ -268,5 +269,12 @@
 		    <artifactId>honda-service</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<!--
+		<dependency>
+		    <groupId>com.honda</groupId>
+		    <artifactId>honda-service-sharding</artifactId>
+		    <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		-->
 	</dependencies>
 </project>
