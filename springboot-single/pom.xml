@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>honda-springboot-single</artifactId>
 	<packaging>jar</packaging>
-	<name>springboot</name>
+	<name>springboot-single</name>
 	<description>Honda Project</description>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -149,13 +149,16 @@
 			<id>dev</id>
 			<properties>
 				<env>dev</env>
-				<spring.pid.file>/Users/maqiang/tmp/ducati.pid</spring.pid.file>
-				<path.log.logback>/Users/maqiang/tmp/logs/ducati</path.log.logback>
+				<spring.pid.file>/Users/maqiang/tmp/honda.pid</spring.pid.file>
+				<path.log.logback>/Users/maqiang/tmp/logs/honda</path.log.logback>
 				<log.level>INFO</log.level>
 				<spring.freemarker.cache>false</spring.freemarker.cache>
 				<prefix.resource>/static</prefix.resource>
-				<eureka.addr>47.93.89.0:8761</eureka.addr>
-				<eureka.instance.hostname>47.93.89.0</eureka.instance.hostname>
+				<spring.datasource.url>47.93.89.9:3306/honda</spring.datasource.url>
+				<spring.datasource.password>nimda</spring.datasource.password>
+				<spring.datasource.url.slave>47.93.89.9:3306/honda</spring.datasource.url.slave>
+				<spring.datasource.username.slave>finder</spring.datasource.username.slave>
+				<spring.datasource.password.slave>rednif</spring.datasource.password.slave>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -165,13 +168,16 @@
 			<id>pro</id>
 			<properties>
 				<env>pro</env>
-				<spring.pid.file>/quincy/tmp/ducati1.pid</spring.pid.file>
-				<path.log.logback>/quincy/tmp/logs/ducati1</path.log.logback>
+				<spring.pid.file>/quincy/tmp/honda.pid</spring.pid.file>
+				<path.log.logback>/quincy/tmp/logs/honda</path.log.logback>
 				<log.level>WARN</log.level>
 				<spring.freemarker.cache>true</spring.freemarker.cache>
 				<prefix.resource>https://xxx.maqiangcgq.com/ducati</prefix.resource>
-				<eureka.addr>10.27.74.163:8761</eureka.addr>
-				<eureka.instance.hostname>10.27.74.163</eureka.instance.hostname>
+				<spring.datasource.url>10.27.74.163:3306/honda</spring.datasource.url>
+				<spring.datasource.password>nimda</spring.datasource.password>
+				<spring.datasource.url.slave>10.27.74.163:3306/honda</spring.datasource.url.slave>
+				<spring.datasource.username.slave>finder</spring.datasource.username.slave>
+				<spring.datasource.password.slave>rednif</spring.datasource.password.slave>
 			</properties>
 		</profile>
 	</profiles>
@@ -251,6 +257,11 @@
 		    <groupId>org.springframework.cloud</groupId>
 		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
 		    <version>${version.spring-cloud}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.quincy</groupId>
+		    <artifactId>quincy-jdbc</artifactId>
+		    <version>2.0.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.honda</groupId>

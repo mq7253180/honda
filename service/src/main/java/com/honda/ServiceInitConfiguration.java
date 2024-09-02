@@ -2,6 +2,8 @@ package com.honda;
 
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +15,13 @@ import com.quincy.auth.TempPwdLoginEmailInfo;
 import com.quincy.auth.controller.AuthActions;
 import com.quincy.auth.controller.RootControllerHandler;
 import com.quincy.auth.o.User;
+import com.quincy.core.redis.JedisSource;
 import com.quincy.sdk.Client;
 
 import jakarta.servlet.http.HttpServletRequest;
+import redis.clients.jedis.Jedis;
 
-@PropertySource(value = {"classpath:application-service.properties", "classpath:application-sensitiveness.properties"})
+@PropertySource(value = "classpath:application-service.properties")
 @Configuration
 public class ServiceInitConfiguration {
 	@Autowired
@@ -83,4 +87,15 @@ public class ServiceInitConfiguration {
 			}
 		};
 	}
+
+	@Autowired 
+    private JedisSource jedisSource;
+
+	@PostConstruct
+    public void init() {
+    	Jedis jedis = jedisSource.get();
+    	jedis.set("aaa", "bbb");
+    	System.out.println("JEDIS_LOADED=================="+jedis.get("aaa"));
+    	jedis.del("aaa");
+    }
 }
