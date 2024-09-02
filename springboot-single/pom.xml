@@ -154,9 +154,10 @@
 				<log.level>INFO</log.level>
 				<spring.freemarker.cache>false</spring.freemarker.cache>
 				<prefix.resource>/static</prefix.resource>
-				<spring.datasource.url>47.93.89.9:3306/honda</spring.datasource.url>
+				<spring.datasource.url>47.93.89.0:3306/honda</spring.datasource.url>
+				<spring.datasource.username>admin</spring.datasource.username>
 				<spring.datasource.password>nimda</spring.datasource.password>
-				<spring.datasource.url.slave>47.93.89.9:3306/honda</spring.datasource.url.slave>
+				<spring.datasource.url.slave>47.93.89.0:3306/honda</spring.datasource.url.slave>
 				<spring.datasource.username.slave>finder</spring.datasource.username.slave>
 				<spring.datasource.password.slave>rednif</spring.datasource.password.slave>
 			</properties>
@@ -174,6 +175,7 @@
 				<spring.freemarker.cache>true</spring.freemarker.cache>
 				<prefix.resource>https://xxx.maqiangcgq.com/ducati</prefix.resource>
 				<spring.datasource.url>10.27.74.163:3306/honda</spring.datasource.url>
+				<spring.datasource.username>admin</spring.datasource.username>
 				<spring.datasource.password>nimda</spring.datasource.password>
 				<spring.datasource.url.slave>10.27.74.163:3306/honda</spring.datasource.url.slave>
 				<spring.datasource.username.slave>finder</spring.datasource.username.slave>
@@ -258,7 +260,6 @@
 		    <artifactId>spring-cloud-starter-bootstrap</artifactId>
 		    <version>${version.spring-cloud}</version>
 		</dependency>
-
 		<dependency>
 		    <groupId>com.quincy</groupId>
 		    <artifactId>quincy-jdbc</artifactId>
@@ -269,12 +270,5 @@
 		    <artifactId>honda-service</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<!--
-		<dependency>
-		    <groupId>com.honda</groupId>
-		    <artifactId>honda-service-sharding</artifactId>
-		    <version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		-->
 	</dependencies>
 </project>
