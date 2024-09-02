@@ -92,12 +92,14 @@ public class UserServiceShardingImpl implements UserService {
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
+				long currentTimeMillis = System.currentTimeMillis();
 				List<UserExtDto>[] userExtListArray = userAllShardsDao.findUserExt();
 				for(int i=0;i<userExtListArray.length;i++) {
 					List<UserExtDto> userExtList = userExtListArray[i];
 					long shardingKey = i;
 					userExtList.forEach(o->{
-						userServiceShardingProxy.syncData(shardingKey, o.getId());
+						if(currentTimeMillis-o.getLastUpdationTime().getTime()>30000)//超过一定时间才同步，防止与正常同步冲突
+							userServiceShardingProxy.syncData(shardingKey, o.getId(), o.getUpdationVersion());
 					});
 				}
 			}

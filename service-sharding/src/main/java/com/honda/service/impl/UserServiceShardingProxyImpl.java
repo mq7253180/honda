@@ -32,14 +32,14 @@ public class UserServiceShardingProxyImpl extends UserServiceImpl implements Use
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
 	public UserEntity updateLogin(@ShardingKey Long shardingKey, User vo, Client client) {
-		userShardingDao.updateUpdationStatus(0, vo.getId());
+		userShardingDao.updateUpdationStatusToSyncing(vo.getId());
 		return this.updateLogin(vo, client);
 	}
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
 	public UserEntity update(@ShardingKey Long shardingKey, User vo) {
-		userShardingDao.updateUpdationStatus(0, vo.getId());
+		userShardingDao.updateUpdationStatusToSyncing(vo.getId());
 		return this.update(vo);
 	}
 
@@ -58,9 +58,25 @@ public class UserServiceShardingProxyImpl extends UserServiceImpl implements Use
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
-	public int syncData(@ShardingKey Long shardingKey, Long id) {
-		UserEntity po = userRepository.findById(id).get();
+	public void syncData(@ShardingKey Long shardingKey, Long id) {
+		this.syncData(shardingKey, id, -1);
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
+	@Override
+	public void syncData(@ShardingKey Long shardingKey, Long id, int version) {
+		if(version<0) {//修改完用户信息后立即同步，当前进程行为无需乐观锁
+			this.doSyncData(shardingKey, id);
+			userShardingDao.updateUpdationStatusToSynced(id);
+		} else if(userShardingDao.updateUpdationStatusToSynced(id, version)>0)//定时任务扫描，事务补偿，防止同时同步同一条数据
+			this.doSyncData(shardingKey, id);
+	}
+
+	private void doSyncData(Long shardingKey, Long id) {
+		UserEntity po = userRepository.findById(id).get();//查询当前分片待同步数据
+		/*
+		 * 同步至其他分片
+		 */
 		userAllShardsDao.update(shardingKey, po.getUsername(), po.getMobilePhone(), po.getEmail(), po.getPassword(), po.getName(), po.getGender(), id);
-		return userShardingDao.updateUpdationStatus(1, id);
 	}
 }
