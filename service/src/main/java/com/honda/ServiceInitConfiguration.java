@@ -21,7 +21,7 @@ import com.quincy.sdk.Client;
 import jakarta.servlet.http.HttpServletRequest;
 import redis.clients.jedis.Jedis;
 
-@PropertySource(value = "classpath:application-service.properties")
+@PropertySource({"classpath:application-service.properties", "classpath:application-sensitiveness.properties"})
 @Configuration
 public class ServiceInitConfiguration {
 	@Autowired

@@ -15,5 +15,6 @@ public class SpringBootConfiguration {
     @PostConstruct
     public void init() {
     	configuration.setSharedVariable("p", new PaginationTemplateDirectiveModelBean());
+    	System.out.println("==================SpringBootConfiguration=========SHARDING");
     }
 }
