@@ -25,11 +25,6 @@
 		    <version>2.0.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-core</artifactId>
-		    <version>2.14.2</version>
-		</dependency>
-		<dependency>
 		    <groupId>com.honda</groupId>
 		    <artifactId>honda-service</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>
