@@ -83,7 +83,7 @@ public class UserServiceShardingImpl implements UserService {
 									userServiceShardingProxy.syncData(entity.getValue(), id);
 									userIdsToSync.remove(id);
 								} catch(Exception ex) {
-									log.error("USER_DATA_SYNC_ERROR===============\r\n", ex);
+									log.error("USER_DATA_SYNC_ERROR===============", ex);
 								}
 							});
 						}
@@ -95,14 +95,18 @@ public class UserServiceShardingImpl implements UserService {
 			@Override
 			public void run() {
 				long currentTimeMillis = System.currentTimeMillis();
-				List<UserExtDto>[] userExtListArray = userAllShardsDao.findUserExt();
-				for(int i=0;i<userExtListArray.length;i++) {
-					List<UserExtDto> userExtList = userExtListArray[i];
-					long shardingKey = i;
-					userExtList.forEach(o->{
-						if(currentTimeMillis-o.getLastUpdationTime().getTime()>TIMER_DELAY_PERIOD)//超过一定时间才同步，防止与正常同步冲突
-							userServiceShardingProxy.syncData(shardingKey, o.getId(), o.getUpdationVersion());
-					});
+				try {
+					List<UserExtDto>[] userExtListArray = userAllShardsDao.findUserExt();
+					for(int i=0;i<userExtListArray.length;i++) {
+						List<UserExtDto> userExtList = userExtListArray[i];
+						long shardingKey = i;
+						userExtList.forEach(o->{
+							if(currentTimeMillis-o.getLastUpdationTime().getTime()>TIMER_DELAY_PERIOD)//超过一定时间才同步，防止与正常同步冲突
+								userServiceShardingProxy.syncData(shardingKey, o.getId(), o.getUpdationVersion());
+						});
+					}
+				} catch(Exception e) {
+					log.error("USER_DATA_SYNC_ERROR===============", e);
 				}
 			}
 		}, TIMER_DELAY_PERIOD, TIMER_DELAY_PERIOD);
