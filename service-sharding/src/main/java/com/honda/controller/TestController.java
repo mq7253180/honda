@@ -20,7 +20,7 @@ public class TestController {
 	public void updateUser(@RequestParam(required = true, value = "name")String name) {
 		User vo = new User();
 		vo.setId(4l);
-		vo.setShardingKey(1l);
+		vo.setShardingKey(17l);
 		vo.setName(name);
 		userService.update(vo);
 	}
