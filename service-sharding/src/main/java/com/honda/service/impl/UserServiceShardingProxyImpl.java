@@ -65,8 +65,7 @@ public class UserServiceShardingProxyImpl extends UserServiceImpl implements Use
 	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
 	@Override
 	public void syncData(@ShardingKey Long shardingKey, Long id, int version) {
-		if(version<0) {//修改完用户信息后立即同步，当前进程行为无需乐观锁
-			userShardingDao.updateUpdationStatusToSynced(id);
+		if(version<0&&userShardingDao.updateUpdationStatusToSynced(id)>0) {//修改完用户信息后立即同步，当前进程行为无需乐观锁
 			this.doSyncData(shardingKey, id);
 		} else if(userShardingDao.updateUpdationStatusToSynced(id, version)>0)//定时任务扫描，事务补偿，防止同时同步同一条数据
 			this.doSyncData(shardingKey, id);
