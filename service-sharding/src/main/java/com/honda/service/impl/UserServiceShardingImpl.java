@@ -72,7 +72,7 @@ public class UserServiceShardingImpl implements UserService {
 				while(!stoped) {
 					synchronized(LOCK) {
 						try {
-							LOCK.wait(10000);
+							LOCK.wait(5000);
 						} catch (InterruptedException e) {
 							log.error("WAITING_ERROR=========", e);
 						}
@@ -81,10 +81,10 @@ public class UserServiceShardingImpl implements UserService {
 								Long id = entity.getKey();
 								try {
 									userServiceShardingProxy.syncData(entity.getValue(), id);
-									userIdsToSync.remove(id);
 								} catch(Exception ex) {
 									log.error("USER_DATA_SYNC_ERROR===============", ex);
 								}
+								userIdsToSync.remove(id);
 							});
 						}
 					}
