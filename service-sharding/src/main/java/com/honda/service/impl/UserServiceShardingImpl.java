@@ -62,6 +62,8 @@ public class UserServiceShardingImpl implements UserService {
 		}
 	}
 
+	private final static long TIMER_DELAY_PERIOD = 30000;
+
 	@PostConstruct
 	public void init() {
 		new Thread(new Runnable() {
@@ -98,12 +100,12 @@ public class UserServiceShardingImpl implements UserService {
 					List<UserExtDto> userExtList = userExtListArray[i];
 					long shardingKey = i;
 					userExtList.forEach(o->{
-						if(currentTimeMillis-o.getLastUpdationTime().getTime()>30000)//超过一定时间才同步，防止与正常同步冲突
+						if(currentTimeMillis-o.getLastUpdationTime().getTime()>TIMER_DELAY_PERIOD)//超过一定时间才同步，防止与正常同步冲突
 							userServiceShardingProxy.syncData(shardingKey, o.getId(), o.getUpdationVersion());
 					});
 				}
 			}
-		}, 30000, 30000);
+		}, TIMER_DELAY_PERIOD, TIMER_DELAY_PERIOD);
 	}
 
 	@PreDestroy
