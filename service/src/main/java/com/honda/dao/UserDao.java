@@ -1,7 +1,7 @@
 package com.honda.dao;
 
-import com.quincy.sdk.annotation.ExecuteUpdate;
-import com.quincy.sdk.annotation.JDBCDao;
+import com.quincy.sdk.annotation.jdbc.ExecuteUpdate;
+import com.quincy.sdk.annotation.jdbc.JDBCDao;
 
 @JDBCDao
 public interface UserDao {

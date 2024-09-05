@@ -9,10 +9,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.honda.service.UserService;
-import com.quincy.auth.TempPwdLoginEmailInfo;
-import com.quincy.auth.controller.RootControllerHandler;
 import com.quincy.sdk.AuthActions;
 import com.quincy.sdk.Client;
+import com.quincy.sdk.RootControllerHandler;
+import com.quincy.sdk.TempPwdLoginEmailInfo;
 import com.quincy.sdk.o.User;
 
 import jakarta.servlet.http.HttpServletRequest;

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.quincy.sdk.Client;
-import com.quincy.sdk.annotation.ReadOnly;
+import com.quincy.sdk.annotation.jdbc.ReadOnly;
 import com.quincy.sdk.helper.CommonHelper;
 import com.quincy.sdk.o.User;
 import com.honda.ControllerUtils;

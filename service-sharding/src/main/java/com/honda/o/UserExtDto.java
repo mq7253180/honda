@@ -2,8 +2,8 @@ package com.honda.o;
 
 import java.util.Date;
 
-import com.quincy.sdk.annotation.Column;
-import com.quincy.sdk.annotation.DTO;
+import com.quincy.sdk.annotation.jdbc.Column;
+import com.quincy.sdk.annotation.jdbc.DTO;
 
 import lombok.Data;
 
