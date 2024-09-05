@@ -23,10 +23,10 @@ import com.honda.o.UserDto;
 import com.honda.o.UserExtDto;
 import com.honda.service.UserService;
 import com.honda.service.UserServiceShardingProxy;
-import com.quincy.auth.o.Enterprise;
-import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.SnowFlake;
+import com.quincy.sdk.o.Enterprise;
+import com.quincy.sdk.o.User;
 
 @Primary
 @Service

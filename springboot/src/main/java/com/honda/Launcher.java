@@ -15,11 +15,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.quincy.auth.annotation.EnableAnnotationAuth;
-import com.quincy.auth.annotation.EnableMultiEnterprise;
-import com.quincy.auth.annotation.EnableShardingPermissionAndRole;
 import com.quincy.sdk.Constants;
-import com.quincy.sdk.annotation.EnableRedisSessionEviction;
+import com.quincy.sdk.annotation.auth.EnableAnnotationAuth;
+import com.quincy.sdk.annotation.auth.EnableMultiEnterprise;
+import com.quincy.sdk.annotation.auth.EnableRedisSessionEviction;
+import com.quincy.sdk.annotation.auth.EnableShardingPermissionAndRole;
 
 @MapperScan(basePackages = {Constants.PACKAGE_NAME_MAPPER, "com.honda.mapper"})
 @EntityScan(basePackages = {Constants.PACKAGE_NAME_ENTITY, "com.honda.entity"})

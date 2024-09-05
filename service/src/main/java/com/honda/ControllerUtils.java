@@ -1,8 +1,8 @@
 package com.honda;
 
 import com.honda.entity.UserEntity;
-import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
+import com.quincy.sdk.o.User;
 
 public class ControllerUtils {
 	public static User toUser(UserEntity entity, Client client) {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.honda.service.UserService;
-import com.quincy.auth.o.User;
+import com.quincy.sdk.o.User;
 
 @Controller
 @RequestMapping("/ttt")

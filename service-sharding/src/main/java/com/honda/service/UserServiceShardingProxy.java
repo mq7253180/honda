@@ -1,9 +1,9 @@
 package com.honda.service;
 
 import com.honda.entity.UserEntity;
-import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.annotation.sharding.ShardingKey;
+import com.quincy.sdk.o.User;
 
 public interface UserServiceShardingProxy {
 	public UserEntity updateLogin(Long shardingKey, User vo, Client client);

@@ -13,10 +13,10 @@ import com.honda.dao.UserShardingDao;
 import com.honda.entity.UserEntity;
 import com.honda.entity.UserExtEntity;
 import com.honda.service.UserServiceShardingProxy;
-import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.SnowFlake;
 import com.quincy.sdk.annotation.sharding.ShardingKey;
+import com.quincy.sdk.o.User;
 
 @Service
 public class UserServiceShardingProxyImpl extends UserServiceImpl implements UserServiceShardingProxy {

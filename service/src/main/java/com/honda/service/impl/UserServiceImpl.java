@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.quincy.auth.o.User;
 import com.quincy.sdk.Client;
 import com.quincy.sdk.annotation.ReadOnly;
 import com.quincy.sdk.helper.CommonHelper;
+import com.quincy.sdk.o.User;
 import com.honda.ControllerUtils;
 import com.honda.dao.UserDao;
 import com.honda.dao.UserRepository;
