@@ -83,6 +83,7 @@
 			<id>dev</id>
 			<properties>
 				<env>dev</env>
+				<access-control-allow-origin>*</access-control-allow-origin>
 				<server.port>8080</server.port>
 				<spring.jpa.show-sql>true</spring.jpa.show-sql>
 				<expire.session>13</expire.session><!-- minutes -->
@@ -100,6 +101,7 @@
 			<id>pro</id>
 			<properties>
 				<env>pro</env>
+				<access-control-allow-origin>https://*.jep8566.com</access-control-allow-origin>
 				<server.port>8080</server.port>
 				<spring.jpa.show-sql>true</spring.jpa.show-sql>
 				<expire.session>13</expire.session><!-- minutes -->
