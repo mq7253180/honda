@@ -1,5 +1,6 @@
 package com.honda;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,12 @@ public class ServiceInitConfiguration {
 	public AuthActions authActions() {
 		return new AuthActions() {
 			@Override
-			public void loadAttributes(Long userId, Map<String, Object> attributes) {
+			public void onLogin(Long userId, Map<String, Serializable> attributes) {
+				
+			}
+
+			@Override
+			public void sms(String mobilePhone, String vcode, int expireMinuts) {
 				
 			}
 		};
