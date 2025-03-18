@@ -19,7 +19,6 @@ import com.quincy.sdk.Constants;
 import com.quincy.sdk.annotation.auth.EnableAnnotationAuth;
 import com.quincy.sdk.annotation.auth.EnableMultiEnterprise;
 import com.quincy.sdk.annotation.auth.EnableRedisSessionEviction;
-import com.quincy.sdk.annotation.auth.EnableShardingPermissionAndRole;
 
 @MapperScan(basePackages = {Constants.PACKAGE_NAME_MAPPER, "com.honda.mapper"})
 @EntityScan(basePackages = {Constants.PACKAGE_NAME_ENTITY, "com.honda.entity"})
@@ -31,7 +30,6 @@ import com.quincy.sdk.annotation.auth.EnableShardingPermissionAndRole;
 @EnableScheduling
 @EnableAnnotationAuth
 @EnableRedisSessionEviction(pcBrowser = true, mobileBrowser = true, app = true)
-@EnableShardingPermissionAndRole
 @EnableMultiEnterprise
 @SpringBootApplication/*(exclude = {
         DataSourceAutoConfiguration.class
