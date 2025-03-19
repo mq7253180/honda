@@ -1,14 +1,20 @@
 package com.honda;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.quincy.sdk.AuthActions;
+import com.quincy.auth.entity.Permission;
+import com.quincy.auth.entity.Role;
+import com.quincy.sdk.AuthServerActions;
 import com.quincy.sdk.RootControllerHandler;
 import com.quincy.sdk.TempPwdLoginEmailInfo;
+import com.quincy.sdk.o.Menu;
+import com.quincy.sdk.o.User;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -16,11 +22,35 @@ import jakarta.servlet.http.HttpServletRequest;
 @Configuration
 public class ServiceInitConfiguration {
 	@Bean
-	public AuthActions authActions() {
-		return new AuthActions() {
+	public AuthServerActions authActions() {
+		return new AuthServerActions() {
 			@Override
 			public void sms(String mobilePhone, String vcode, int expireMinuts) {
 				
+			}
+
+			@Override
+			public List<Role> findRoles(Long userId) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public List<Permission> findPermissions(Long userId) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public List<Menu> findMenus(Long userId) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public <T extends Serializable> T userExt(User user) {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 	}

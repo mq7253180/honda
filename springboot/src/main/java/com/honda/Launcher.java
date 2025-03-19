@@ -17,7 +17,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.quincy.sdk.Constants;
 import com.quincy.sdk.annotation.auth.EnableAnnotationAuth;
-import com.quincy.sdk.annotation.auth.EnableMultiEnterprise;
 import com.quincy.sdk.annotation.auth.EnableRedisSessionEviction;
 
 @MapperScan(basePackages = {Constants.PACKAGE_NAME_MAPPER, "com.honda.mapper"})
@@ -30,7 +29,6 @@ import com.quincy.sdk.annotation.auth.EnableRedisSessionEviction;
 @EnableScheduling
 @EnableAnnotationAuth
 @EnableRedisSessionEviction(pcBrowser = true, mobileBrowser = true, app = true)
-@EnableMultiEnterprise
 @SpringBootApplication/*(exclude = {
         DataSourceAutoConfiguration.class
 })*/
