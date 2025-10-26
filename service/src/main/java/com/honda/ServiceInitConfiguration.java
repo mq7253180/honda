@@ -1,6 +1,5 @@
 package com.honda;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,14 @@ public class ServiceInitConfiguration {
 	public AuthServerActions authActions() {
 		return new AuthServerActions() {
 			@Override
+			public Object userExt(User user) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
 			public void sms(String mobilePhone, String vcode, int expireMinuts) {
+				// TODO Auto-generated method stub
 				
 			}
 
@@ -43,12 +49,6 @@ public class ServiceInitConfiguration {
 
 			@Override
 			public List<Menu> findMenus(Long userId) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public <T extends Serializable> T userExt(User user) {
 				// TODO Auto-generated method stub
 				return null;
 			}
